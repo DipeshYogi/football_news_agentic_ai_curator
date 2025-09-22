@@ -1,2 +1,2 @@
-# football_news_agentic_ai_curator
+# Football AI Curator
 An AI powered Football News Curator
