@@ -47,6 +47,62 @@ services:
     ports:
       - "${MLFLOW_PORT}:5000"
 
+  etcd:
+    container_name: milvus_etcd
+    image: quay.io/coreos/etcd:v3.5.0
+    environment:
+      ETCD_AUTO_COMPACTION_MODE: revision
+      ETCD_AUTO_COMPACTION_RETENTION: 1000
+      ETCD_QUOTA_BACKEND_BYTES: 4294967296
+      ETCD_SNAPSHOT_COUNT: 50000
+    command: >
+      etcd 
+        -name s0
+        -initial-advertise-peer-urls http://etcd:2380
+        -listen-peer-urls http://0.0.0.0:2380
+        -listen-client-urls http://0.0.0.0:2379
+        -advertise-client-urls http://etcd:2379
+        -initial-cluster s0=http://etcd:2380
+    ports:
+      - "2379:2379"
+      - "2380:2380"
+    volumes:
+      - etcd_data:/etcd
+
+  milvus:
+    container_name: milvus
+    image: milvusdb/milvus:v2.6.2
+    command: ["milvus", "run", "standalone"]
+    security_opt:
+      - seccomp:unconfined
+    environment:
+      ETCD_ENDPOINTS: etcd:2379
+      MINIO_ADDRESS: minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MQ_TYPE: woodpecker
+    ports:
+      - "19530:19530"
+      - "9091:9091"
+    volumes:
+      - milvus_data:/var/lib/milvus
+    depends_on:
+      - etcd
+      - minio
+
+  attu:
+    image: zilliz/attu:latest
+    container_name: milvus_attu
+    environment:
+      MILVUS_ADDRESS: milvus
+      MILVUS_PORT: 19530
+    ports:
+      - "8080:8080"
+    depends_on:
+      - milvus
+
 volumes:
   postgres_data:
   minio_data:
+  etcd_data:
+  milvus_data:
