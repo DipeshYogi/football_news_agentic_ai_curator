@@ -21,8 +21,8 @@ services:
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
     command: server /data --console-address ":${MINIO_CONSOLE_PORT}"
     ports:
-      - "${MINIO_PORT}:9000"          # S3 API
-      - "${MINIO_CONSOLE_PORT}:9001" # MinIO Console
+      - "${MINIO_PORT}:9000"
+      - "${MINIO_CONSOLE_PORT}:9001"
     volumes:
       - minio_data:/data
 
