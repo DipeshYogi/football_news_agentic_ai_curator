@@ -7,8 +7,8 @@ RUN apt-get update && apt-get install -y \
     gcc \
     libpq-dev \
     python3-dev \
-    && pip install psycopg2-binary \
-    && apt-get clean
+    && pip install psycopg2-binary boto3 botocore\
+    && apt-get clean 
 
 RUN useradd -m mlflow
 
