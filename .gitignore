@@ -211,3 +211,9 @@ notebooks/mlruns
 
 # Finetuning
 notebooks/lora_mistral_checkpoint
+
+# Airflow
+airflow/logs
+
+# test
+sandbox/
