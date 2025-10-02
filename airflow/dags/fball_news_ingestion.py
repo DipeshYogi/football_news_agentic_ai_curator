@@ -79,7 +79,7 @@ default_args = {
 
 with DAG('ingest_football_news',
          default_args=default_args,
-         schedule_interval='@hourly',
+         schedule_interval='0 */3 * * *',
          catchup=False) as dag:
 
     ingest_task = PythonOperator(

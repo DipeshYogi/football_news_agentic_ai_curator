@@ -1,3 +1,9 @@
 feedparser==6.0.12
 newspaper3k
 lxml_html_clean
+langchain==0.3.27
+langchain_community==0.3.30
+numpy==1.26.4
+pandas==2.1.1
+pymilvus==2.6.2
+sentence-transformers==5.1.1
