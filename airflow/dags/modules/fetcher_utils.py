@@ -30,7 +30,7 @@ class RssFetcher:
             print(f"\n[INFO] Fetching RSS feed: {feed_url}")
             feed = feedparser.parse(feed_url)
             
-            for entry in feed.entries:
+            for entry in feed.entries[0:1]:
                 url = entry.link
                 print(f"\n[INFO] Scraping article: {url}")
                 

@@ -12,21 +12,22 @@ from modules.milvus_handler import TextChunker, TextEmbedder, MilvusHandler
 def ingest_embed_article_task(**kwargs):
     rss_feeds = RssFetcher(["http://feeds.bbci.co.uk/sport/football/rss.xml"])
     articles = rss_feeds.collect_articles()
-
-    chunker = TextChunker()
-    embedder = TextEmbedder()
-    milvus = MilvusHandler()
-    
-    for article in articles:
-        chunks = chunker.chunk_text(article["text"])
-        embeddings = embedder.embed_texts(chunks)
-        milvus.insert_chunks(embeddings, chunks, [article]*len(chunks))
+    try:
+        chunker = TextChunker()
+        embedder = TextEmbedder()
+        milvus = MilvusHandler()
+        for article in articles:
+            chunks = chunker.chunk_text(article["text"])
+            embeddings = embedder.embed_texts(chunks)
+            milvus.insert_chunks(embeddings, chunks, [dict(article) for _ in range(len(chunks))])
+    except Exception as e:
+        print(f"[INFO] EXECUTION FAILED = {e}")
 
 
 default_args = {
     'owner': 'airflow',
     'start_date': datetime.datetime.now(),
-    'retries': 1
+    'retries': 0
 }
 
 with DAG('milvus_ingest_football_news',

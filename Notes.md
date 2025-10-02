@@ -6,4 +6,3 @@
 - Re-ranking techniques
 - Deduplication
 - Metadata Enrich
-
